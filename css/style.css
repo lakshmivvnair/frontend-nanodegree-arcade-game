@@ -1,3 +1,72 @@
 body {
-    text-align: center;
+  background-color: #fffad5;
+  font-family: 'Luckiest Guy', 'Press Start 2P', cursive;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.row {
+  max-width: 100%;
+}
+
+.stats {
+  color: #bd4932;
+  font-size: 3em;
+  margin-left: 20px;
+}
+
+.stopClick {
+  pointer-events: none;
+}
+
+#main {
+  position: relative;
+  top: 0;
+}
+
+#characters {
+  background: #fecc34;
+  position: absolute;
+  top: 0px;
+  left: 35px;
+  width: 300px;
+}
+
+#gameStats {
+  background: #fecc34;
+  position: absolute;
+  right: 35px;
+  width: 300px;
+  top: 0px;
+}
+
+h1 {
+  font-size: 80px;
+  color: #661456;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  font-weight: bold;
+}
+
+h2 {
+  color: #b02295;
+  font-size: 40px;
+  font-family: inherit;
+  -webkit-margin-before: .5em;
+  -webkit-margin-after: 0;
+}
+
+button {
+  background: #fffad5;
+  display: block;
+  color: #b02295;
+  font-size: 25px;
+  display: inline;
+  padding: 17px;
+  margin: 10px;
+  border: 1px solid #661456;
+  border-radius: 19px;
+  font-weight: bold;
 }

@@ -23,11 +23,47 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        gameStatus;
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
+
+    /* This variable will be used to check status of game play.
+    // 0 - Game loaded. Not started
+    // 1 - Game in progress. After pressing Start Game button
+    // 2 - Game paused. After pressing Pause Game button
+    // 3 - Game Over. But session alive. Can play more. Add to session.
+    */
+    gameStatus = 0;
+
+    // Create objects to handle Start & Pause button actions
+    var btnStartGame = document.getElementById('startGame');
+    var btnPauseGame = document.getElementById('pauseGame');
+
+    /*  Create div object to add stopClick css class
+     *  stopClick class adds pointer-events: none
+     *  to disable player image change when game is progress
+     */
+    var characterDiv = document.getElementById('characters');
+
+    btnStartGame.onclick = function() {
+        if (gameStatus === 3) {             // if restarting after game over
+            reset('savePlayerState');       // resetting all objects while saving player state
+        }
+        gameStatus = 1;
+        message.text = '';
+        btnPauseGame.disabled = false;      // enable game pause button
+    };
+
+    btnPauseGame.onclick = function() {
+        btnStartGame.disabled = false;
+        gameStatus = 2;
+        message.text = 'Game Paused';
+        message.x = 100;
+    };
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -42,11 +78,32 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
+        switch (gameStatus) {
+          case 0:                                       // Game not started yet
+                btnPauseGame.disabled = true;           // Disable Pause
+                characterDiv.className = '';            // Enable Character Pick
+                break;
+          case 1:
+                update(dt);                             // Game in progress
+                characterDiv.className = 'stopClick';   // disabling click on div 'characters' -> images
+                btnStartGame.disabled = true;           // disable Start Game button until GAME OVER
+                break;
+          case 3:                                       // Game OVER
+                btnPauseGame.disabled = true;           // Disable Pause
+                btnStartGame.disabled = false;          // Enable Game restart
+                characterDiv.className = '';            // Enable Character Pick
+                break;
+          default:
+        }
+
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        update(dt);
         render();
+
+        message.update();
+        loadCharacters();
+
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -64,7 +121,11 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
+        //reset();
+
+        // to Set up objects for Enemy, Gem, Rock
+        setUpGame();
+
         lastTime = Date.now();
         main();
     }
@@ -94,7 +155,23 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
         player.update();
+
+        allGems.forEach(function(gem) {
+            gem.update();
+        });
+
+        allRocks.forEach(function(rock) {
+            rock.update();
+        });
+
+        if (player.lives === 0) {
+            player.scoreHistory.push(player.score);
+            gameStatus = 3;
+            message.text = 'GAME OVER';
+            message.x = 150;
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -153,16 +230,50 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        allGems.forEach(function(gem) {
+            gem.render();
+        });
+
+        allRocks.forEach(function(rock) {
+            rock.render();
+        });
+
+        message.render();
     }
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
-    function reset() {
-        // noop
+    function reset(savePlayerState) {
+        resetEntities(savePlayerState);
     }
 
+    /* This function is called by the render function and is called on each game
+     * tick. It's purpose is to then call the render functions you have defined
+     * on your enemy and player entities within app.js
+     */
+    function resetEntities(savePlayerState) {
+        /* Loop through all of the objects within the allEnemies array and call
+         * the render function you have defined.
+         */
+
+        allEnemies.forEach(function(enemy) {
+            enemy.reset();
+        });
+
+        player.reset(savePlayerState);
+
+        rockSetUp();
+
+        allGems.forEach(function(gem) {
+            gemSetUp(gem);
+        });
+
+        message.reset();
+
+    }
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -172,7 +283,16 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/gem-blue.png',
+        'images/gem-green.png',
+        'images/gem-orange.png',
+        'images/rock.png'
     ]);
     Resources.onReady(init);
 
