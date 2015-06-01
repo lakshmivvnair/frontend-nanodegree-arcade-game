@@ -121,6 +121,7 @@ Player.prototype.reset = function(savePlayerState) {
 // Function blockCheck() checks if there is a rock object near player
 Player.prototype.handleInput = function(keyCode) {
     if (player.lives !== 0) {
+        enterKey = false;
         switch (keyCode) {
         case 'left' :
             if ((this.x - 100) > -50 && blockCheck().indexOf('LEFT') === -1) {
@@ -143,6 +144,9 @@ Player.prototype.handleInput = function(keyCode) {
             if ((this.y + 80) < 450 && blockCheck().indexOf('DOWN') === -1) {
                 this.y += 80;
             }
+            break;
+        case 'enter':
+            enterKey =  true;
             break;
         default:
         }
@@ -292,7 +296,7 @@ Rock.prototype.update = function() {
     }
 
     // if player has keys then reset rock position on canvas
-    if (this.block !== '' && player.keysCollected !== 0){
+    if (this.block !== '' && player.keysCollected !== 0 && enterKey){
         player.keysCollected - 1 > 0 ? player.keysCollected -= 1 : player.keysCollected = 0;
         rockSetUp(this);
     }
@@ -358,6 +362,9 @@ var message = new Message(25,500, "<-- Pick character");
 // OR player collects another gem before key
 var keyEnable = true;
 
+//  Boolean variable to test if enter key was hit to clear rock
+var enterKey;
+
 /************   Create variables for HTML Elements    ********/
 
 
@@ -379,7 +386,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        13: 'enter'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
