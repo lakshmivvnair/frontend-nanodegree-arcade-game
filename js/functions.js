@@ -17,6 +17,9 @@ function setUpGame() {
         gemSetUp(gem);
     });
 
+    // Set up special collectible Gem object 'key'
+    keySetUp();
+
 }
 
 
@@ -52,11 +55,11 @@ function gemSetUp(gem) {
 
 
 //  Function to set up Rock Objects
-function rockSetUp(){
+function rockSetUp(clearRock){
     var yValues = [70, 150, 230];
     var xValues = [100,200,300,400];
 
-    var yIndex, prevXval, xIndex;
+    var yIndex, prevXval, xIndex, rock;
     prevXval = -1;                                  // to keep a distance between the rocks
 
     for (var i = 0; i < allRocks.length ; i++) {
@@ -65,8 +68,14 @@ function rockSetUp(){
         if (prevXval !== xValues[xIndex]) {         // Rock objects cannot have same 'x' value
             x = xValues[xIndex];
             y = yValues[yIndex];
-            allRocks[i].x = x;
-            allRocks[i].y = y;
+            if (clearRock !== undefined) {          // if rock object passed , reset just that
+                rock = clearRock;                   // used to reset just one rock when player has key
+                i = allRocks.length;
+            } else {
+                rock = allRocks[i];
+            }
+            rock.x = x;
+            rock.y = y;
             prevXval = xValues[xIndex];
         } else {
             i--;                                    // if same, reset i to run loop again
@@ -74,6 +83,13 @@ function rockSetUp(){
     }
 }
 
+
+//  Function to set up special collectible 'key'
+function keySetUp() {
+    gemSetUp(key);              // not adding this to allGems array because we want to
+    key.gemIndex = 3;           // avoid resetting the gemIndex
+    key.score = 1;              // gemIndex and score are not changed for this object
+}
 
 // Function to load the characters for left div id 'characters'
 // And set the click event on image element to change the player objects sprite property
@@ -113,16 +129,11 @@ function getFreeX() {
     xxRight = secondX + 50;
     xxLeft = secondX - 50;
 
-    console.log()
-    console.log(firstX + ' ' + secondX);
-    console.log (xLeft, xRight, xxLeft, xxRight);
-
     do {
         xVal = getRandomInt(400,63);
 
         if ((xVal < xRight && xVal > xLeft) || (xVal < xxRight && xVal > xxLeft)) {
             xVal = getRandomInt(400,63);
-            console.log('recompute');
         } else {
             inRange = false;
         }
@@ -148,6 +159,7 @@ function updateScores() {
     lives.textContent = player.lives;
     gemCollected.textContent = player.gemCollected;
     player.scoreHistory.length === 0 ? highScore.textContent = 0 : highScore.textContent = getMaxOfArray(player.scoreHistory);
+    keysCollected.textContent = player.keysCollected;
 }
 
 //  Function to return maximum value in an Array
