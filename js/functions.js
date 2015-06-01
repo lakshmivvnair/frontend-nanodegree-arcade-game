@@ -55,11 +55,11 @@ function gemSetUp(gem) {
 
 
 //  Function to set up Rock Objects
-function rockSetUp(){
+function rockSetUp(clearRock){
     var yValues = [70, 150, 230];
     var xValues = [100,200,300,400];
 
-    var yIndex, prevXval, xIndex;
+    var yIndex, prevXval, xIndex, rock;
     prevXval = -1;                                  // to keep a distance between the rocks
 
     for (var i = 0; i < allRocks.length ; i++) {
@@ -68,8 +68,14 @@ function rockSetUp(){
         if (prevXval !== xValues[xIndex]) {         // Rock objects cannot have same 'x' value
             x = xValues[xIndex];
             y = yValues[yIndex];
-            allRocks[i].x = x;
-            allRocks[i].y = y;
+            if (clearRock !== undefined) {          // if rock object passed , reset just that
+                rock = clearRock;                   // used to reset just one rock when player has key
+                i = allRocks.length;
+            } else {
+                rock = allRocks[i];
+            }
+            rock.x = x;
+            rock.y = y;
             prevXval = xValues[xIndex];
         } else {
             i--;                                    // if same, reset i to run loop again

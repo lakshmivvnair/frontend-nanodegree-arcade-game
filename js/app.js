@@ -290,6 +290,12 @@ Rock.prototype.update = function() {
     } else {
         this.block= '';
     }
+
+    // if player has keys then reset rock position on canvas
+    if (this.block !== '' && player.keysCollected !== 0){
+        player.keysCollected - 1 > 0 ? player.keysCollected -= 1 : player.keysCollected = 0;
+        rockSetUp(this);
+    }
 }
 
 //  Draw rock on canvas
