@@ -172,6 +172,10 @@ var Engine = (function(global) {
             message.text = 'GAME OVER';
             message.x = 150;
         }
+
+        if (player.gemCollected > 7) {
+            key.update();
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -292,7 +296,8 @@ var Engine = (function(global) {
         'images/gem-blue.png',
         'images/gem-green.png',
         'images/gem-orange.png',
-        'images/rock.png'
+        'images/rock.png',
+        'images/key.png'
     ]);
     Resources.onReady(init);
 

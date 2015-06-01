@@ -74,6 +74,7 @@ var Player = function() {
     this.scoreHistory = [];
     this.lives = 3;
     this.gemCollected = 0;
+    this.keysCollected = 0;
 }
 
 // Update player position
@@ -112,6 +113,7 @@ Player.prototype.reset = function(savePlayerState) {
         player.lives = 3;
         player.score  = 0;
         player.gemCollected = 0;
+        player.keysCollected = 0;
     }
 }
 
@@ -170,13 +172,20 @@ Gem.prototype.update = function() {
     signVal === 1 ? compareVal = 73 : compareVal = 50;
 
     if (leftDiff <= compareVal && topDiff === 50) {
-        player.score += this.score;
-        player.gemCollected += 1;
-        message.text = this.score;                  // Display the score linked to gem
-        message.y = 200;
-        message.x = this.x + 30;
-        this.reset();                               // Reset this gem
-        updateScores();                             // Update gameStats div on right
+        if (this.gemIndex === 3 && keyEnable) {         // if collided with key add to keysCollected
+            player.keysCollected += 1;
+            keyEnable = false;                          // Stop rendering key object
+            keySetUp();                                 // Change key x y positions
+        } else if (this.gemIndex !== 3) {
+            player.score += this.score;
+            player.gemCollected += 1;
+            message.text = this.score;                  // Display the score linked to gem
+            message.y = 200;
+            message.x = this.x + 30;
+            this.reset();
+            keyEnable = true;                           // Reset this gem
+        }
+        updateScores();                                 // Update gameStats div on right
     }
 }
 
@@ -185,8 +194,15 @@ Gem.prototype.render = function() {
     var rowGems = [
         'images/gem-blue.png',
         'images/gem-green.png',
-        'images/gem-orange.png'];
+        'images/gem-orange.png',
+        'images/key.png'];
     ctx.drawImage(Resources.get(rowGems[this.gemIndex]), this.x, this.y, 50, 85);
+
+    // key object will displayed for every 7 gems collected
+    // it will stop rendering if player collects another gem before key
+    if (player.gemCollected > 7 && keyEnable) {
+        ctx.drawImage(Resources.get(rowGems[key.gemIndex]), key.x, key.y, 50, 85);
+    }
 }
 
 Gem.prototype.reset = function() {
@@ -307,7 +323,8 @@ var player = new Player();
 
 // Create gems - 2 gems at a time
 var gem1 = new Gem(),
-    gem2 = new Gem();
+    gem2 = new Gem(),
+    key = new Gem();
 
 var allGems = [];
 
@@ -329,6 +346,12 @@ allRocks.push(rock2);
 var message = new Message(25,500, "<-- Pick character");
 
 
+// To check if key object needs to rendered
+// Key will be rendered only when player collects more than 7 gems
+// It will stop rendering once player collects it
+// OR player collects another gem before key
+var keyEnable = true;
+
 /************   Create variables for HTML Elements    ********/
 
 
@@ -340,6 +363,7 @@ var highScore = document.getElementById('highScore');
 var score = document.getElementById('score');
 var lives = document.getElementById('lives');
 var gemCollected = document.getElementById('gemCollected');
+var keysCollected = document.getElementById('keysCollected');
 
 
 // This listens for key presses and sends the keys to your
