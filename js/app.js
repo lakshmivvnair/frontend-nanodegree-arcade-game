@@ -10,7 +10,7 @@ var Enemy = function() {
     this.x = 0;
     this.y = 0;
     this.speed = 0;
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -44,19 +44,19 @@ Enemy.prototype.update = function(dt) {
         message.y = 175;
         message.x = player.x + 20;
     }
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Reset enemy object. Called when game restarted
 Enemy.prototype.reset = function() {
     this.x = this.baseX;
     this.y = this.baseY;
     this.speed = getRandomInt(350, 50);
-}
+};
 
 
 /**************************************************************
@@ -75,10 +75,10 @@ var Player = function() {
     this.lives = 3;
     this.gemCollected = 0;
     this.keysCollected = 0;
-}
+};
 
 // Update player position
-Player.prototype.update = function(sp) {
+Player.prototype.update = function() {
     if (this.top && (this.y === -10)) {     // Check if player reached water
         player.score += 100;                // Add 100 to score
         this.top = false;                   // Reset boolean
@@ -96,12 +96,12 @@ Player.prototype.update = function(sp) {
     }
 
     updateScores();                         // Update Game Stats display on right of canvas
-}
+};
 
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Reset player object back to start
 Player.prototype.reset = function(savePlayerState) {
@@ -115,7 +115,7 @@ Player.prototype.reset = function(savePlayerState) {
         player.gemCollected = 0;
         player.keysCollected = 0;
     }
-}
+};
 
 // Handle keyboard input to move player object on canvas
 // Function blockCheck() checks if there is a rock object near player
@@ -151,7 +151,7 @@ Player.prototype.handleInput = function(keyCode) {
         default:
         }
     }
-}
+};
 
 /**************************************************************
 *       Class - Gem
@@ -161,9 +161,9 @@ Player.prototype.handleInput = function(keyCode) {
 var Gem = function() {
     this.x = 0;
     this.y = 0;
-    this.score = 0,
+    this.score = 0;
     this.gemIndex = 0;   // to access both gem image and score
-}
+};
 
 // Update Gem on collision with player
 Gem.prototype.update = function() {
@@ -191,7 +191,7 @@ Gem.prototype.update = function() {
         }
         updateScores();                                 // Update gameStats div on right
     }
-}
+};
 
 // Draw the gem collectible on screen based gemIndex value
 Gem.prototype.render = function() {
@@ -207,11 +207,11 @@ Gem.prototype.render = function() {
     if (player.gemCollected > 7 && keyEnable) {
         ctx.drawImage(Resources.get(rowGems[key.gemIndex]), key.x, key.y, 50, 85);
     }
-}
+};
 
 Gem.prototype.reset = function() {
     gemSetUp(this);
-}
+};
 
 /**************************************************************
 *       Class - Message
@@ -221,7 +221,7 @@ var Message = function(x,y,value) {
     this.x = x;
     this.y = y;
     this.text = value;
-}
+};
 
 // Check for messages that need to disappear
 // To be used to set text back to '' when called with
@@ -243,23 +243,23 @@ Message.prototype.update = function() {
     if (this.text === '-1' && this.y < 120) {
         this.text = '';
     }
-}
+};
 
 // Draw message on screen with border using strokeText with fillText
 Message.prototype.render  = function() {
     ctx.font = '50px Luckiest Guy';
-    ctx.fillStyle = '#D90000';
+    ctx.fillStyle = '#d90000';
     ctx.strokeStyle = '#eee';
     ctx.fillText(this.text, this.x, this.y);
     ctx.strokeText(this.text, this.x, this.y);
-}
+};
 
 // Reset the message to game start/ restart mode
 Message.prototype.reset = function() {
     this.x = 25;
     this.y = 500;
     this.text =  "<-- Pick character";
-}
+};
 
 /**************************************************************
 *       Class - Rock
@@ -270,7 +270,7 @@ var Rock = function() {
     this.y = 0;
     this.sprite = 'images/rock.png';
     this.block = '';
-}
+};
 
 //  Set the property block to 'UP', 'DOWN', 'LEFT', 'RIGHT'
 //  depending on player position with respect to the rock object
@@ -296,16 +296,16 @@ Rock.prototype.update = function() {
     }
 
     // if player has keys then reset rock position on canvas
-    if (this.block !== '' && player.keysCollected !== 0 && enterKey){
+    if (this.block !== '' && player.keysCollected !== 0 && enterKey) {
         player.keysCollected - 1 > 0 ? player.keysCollected -= 1 : player.keysCollected = 0;
         rockSetUp(this);
     }
-}
+};
 
 //  Draw rock on canvas
 Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 90, 152);
-}
+};
 
 
 
