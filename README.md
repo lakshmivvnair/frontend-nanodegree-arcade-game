@@ -1,5 +1,14 @@
-GAME RULES
-===============================
+GAME OVERVIEW
+=================
+
+Click [here](http://lakshmivvnair.github.io/frontend-nanodegree-arcade-game/) to play the game 
+
+Use arrow keys (up, down, left, right) to avoid bugs and reach water area. 
+Collect gems to boost your score! Collect keys to remove rocks from your way. Press enter to use key when blocked by rock. Enjoy! 
+
+
+Rules
+------------
 
 1. Player has to reach water, avoiding collision with bugs on the way
 
@@ -16,3 +25,7 @@ GAME RULES
 7. If player has collected key(s), rock can be repositioned by pressing enter to clear way for player.
 
 8. For every 10 gems player gets a new life and gem count is reset to zero.
+
+Screenshot
+------------
+![Game Screenshot](/images/screenshot.png?raw=true "Game Preview")
