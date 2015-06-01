@@ -33,7 +33,7 @@ function enemySetUp() {
         allEnemies[i].baseX = 0;
         allEnemies[i].baseY = yValues[i];
         allEnemies[i].speed = getRandomInt(350, 50);
-    };
+    }
 }
 
 
@@ -104,7 +104,7 @@ function loadCharacters() {
                 player.scoreHistory.length = 0;
                 message.text = 'Start Game -->';
                 message.x = 100;
-            }
+            };
         }(tempText), false);
     }
 }
@@ -171,5 +171,5 @@ function getMaxOfArray(numArray) {
 // Return random int for x, y or index values
 // Uses Math.random() & Math.floor()
 function getRandomInt(max, min) {
-    return Math.floor(Math.random() * (max - min)) + min
+    return Math.floor(Math.random() * (max - min)) + min;
 }
